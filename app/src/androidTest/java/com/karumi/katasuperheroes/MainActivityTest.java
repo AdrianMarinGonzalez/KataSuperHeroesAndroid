@@ -17,6 +17,7 @@
 package com.karumi.katasuperheroes;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -27,7 +28,6 @@ import com.karumi.katasuperheroes.model.SuperHero;
 import com.karumi.katasuperheroes.model.SuperHeroesRepository;
 import com.karumi.katasuperheroes.ui.view.MainActivity;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -74,13 +74,13 @@ import static org.mockito.Mockito.when;
     onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
   }
 
-    @Test public void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
-        givenThereAreSomeSuperHeroes( 10 );
-
-        startActivity();
-
-        onView( withText( "¯\\_(ツ)_/¯" ) ).check( matches( not(isDisplayed()) ) );
-    }
+//    @Test public void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
+//        givenThereAreSomeSuperHeroes( 10 );
+//
+//        startActivity();
+//
+//        onView( withText( "¯\\_(ツ)_/¯" ) ).check( matches( not(isDisplayed()) ) );
+//    }
 
     @Test public void testNumberOfSuperheroesShown() {
         int totalSuperheroes = 10;
@@ -92,7 +92,20 @@ import static org.mockito.Mockito.when;
         onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
     }
 
+    @Test public void showsSuperHeroesName() {
+        int number = 1000;
 
+        givenThereAreSomeSuperHeroes( number );
+
+        startActivity();
+
+        for ( int i = 0; i < number; i++ ) {
+            onView( withText( "SuperHeroe " + i ) ).check( matches( isDisplayed() ) );
+            if ( repository.getAll().get( i ).isAvenger() )
+                onView( withId( R.id.iv_avengers_badge ) ).check( matches( isDisplayed() ) );
+            onView( withId( R.id.recycler_view ) ).perform( RecyclerViewActions.scrollToPosition( i ) );
+        }
+    }
 
   private void givenThereAreNoSuperHeroes() {
     when(repository.getAll()).thenReturn(Collections.<SuperHero>emptyList());
