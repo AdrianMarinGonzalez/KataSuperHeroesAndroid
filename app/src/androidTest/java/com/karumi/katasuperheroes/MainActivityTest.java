@@ -127,27 +127,30 @@ import static org.mockito.Mockito.when;
 
     @Test public void checkSuperheroeDetailActivityTitleWhenSuperheroeIsTapped(){
 
-        givenThereAreSomeSuperHeroes( 10 );
-
+        List<SuperHero> superHeroes = givenThereAreSomeSuperHeroes( 10 );
+        int index = 0;
         startActivity();
 
-        onView(withChild( withText( "SuperHeroe 0" ) ) ).perform(click());
+        onView(withId(R.id.recycler_view)).perform( RecyclerViewActions.actionOnItemAtPosition( index, click() ) );
 
         onView(withId(R.id.tv_super_hero_name))
-                .check( matches( withText( ("SuperHeroe 0") ) ) );
+                .check( matches( withText( ( superHeroes.get( index ).getName() ) ) ) );
     }
 
   private void givenThereAreNoSuperHeroes() {
     when(repository.getAll()).thenReturn(Collections.<SuperHero>emptyList());
   }
 
-    private void givenThereAreSomeSuperHeroes(int number) {
+    private List<SuperHero> givenThereAreSomeSuperHeroes( int number) {
         List<SuperHero> list = new ArrayList<>(  );
         for ( int i = 0; i < number; i++ ) {
             final boolean isAvenger = i%2==0;
-            list.add( new SuperHero( "SuperHeroe " + i, "http://img.lum.dolimg.com/v1/images/3f1baa0812f35ac2910feeaf463a8d9c437a9b19.png?region=0,0,600,600", isAvenger , "Superheroe number " + i ) );
+            final SuperHero superHeroe = new SuperHero( "SuperHeroe " + i, "http://img.lum.dolimg.com/v1/images/3f1baa0812f35ac2910feeaf463a8d9c437a9b19.png?region=0,0,600,600", isAvenger , "Superheroe number " + i );
+            list.add( superHeroe);
+            when(repository.getByName( superHeroe.getName() )).thenReturn( superHeroe );
         }
         when( repository.getAll() ).thenReturn( list );
+        return list;
     }
 
   private MainActivity startActivity() {
