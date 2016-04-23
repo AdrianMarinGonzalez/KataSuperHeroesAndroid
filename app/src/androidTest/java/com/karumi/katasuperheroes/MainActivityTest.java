@@ -81,31 +81,32 @@ import static org.mockito.Mockito.when;
 
   @Mock SuperHeroesRepository repository;
 
-//  @Test public void showsEmptyCaseIfThereAreNoSuperHeroes() {
-//    givenThereAreNoSuperHeroes();
-//
-//    startActivity();
-//
-//    onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
-//  }
+  @Test public void showsEmptyCaseIfThereAreNoSuperHeroes() {
+    givenThereAreNoSuperHeroes();
 
-//    @Test public void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
-//        givenThereAreSomeSuperHeroes( 10 );
-//
-//        startActivity();
-//
-//        onView( withText( "¯\\_(ツ)_/¯" ) ).check( matches( not(isDisplayed()) ) );
-//    }
+    startActivity();
 
-//    @Test public void testNumberOfSuperheroesShown() {
-//        int totalSuperheroes = 10;
-//
-//        givenThereAreSomeSuperHeroes( totalSuperheroes );
-//
-//        startActivity();
-//
-//        onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
-//    }
+    onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
+
+  }
+
+    @Test public void testEmptyCaseNotShowingWhenThereAreSuperheroes(){
+        givenThereAreSomeSuperHeroes( 10 );
+
+        startActivity();
+
+        onView( withId( R.id.tv_empty_case ) ).check( matches( not(isDisplayed()) ) );
+    }
+
+    @Test public void testNumberOfSuperheroesShown() {
+        int totalSuperheroes = 10;
+
+        givenThereAreSomeSuperHeroes( totalSuperheroes );
+
+        startActivity();
+
+        onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
+    }
 
 //    @Test public void showsSuperHeroesName() {
 //        int number = 1000;
