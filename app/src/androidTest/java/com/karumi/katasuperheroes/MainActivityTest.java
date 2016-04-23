@@ -41,9 +41,11 @@ import org.mockito.Mock;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Mockito.when;
 
@@ -101,8 +103,11 @@ import static org.mockito.Mockito.when;
 
         for ( int i = 0; i < number; i++ ) {
             onView( withText( "SuperHeroe " + i ) ).check( matches( isDisplayed() ) );
-            if ( repository.getAll().get( i ).isAvenger() )
-                onView( withId( R.id.iv_avengers_badge ) ).check( matches( isDisplayed() ) );
+            if ( repository.getAll().get( i ).isAvenger() ) {
+                onView( allOf( withId(R.id.iv_avengers_badge), hasSibling( withText( "SuperHeroe " + i ) ) ) )
+                        .check(matches(isDisplayed()));
+            }
+
             onView( withId( R.id.recycler_view ) ).perform( RecyclerViewActions.scrollToPosition( i ) );
         }
     }
