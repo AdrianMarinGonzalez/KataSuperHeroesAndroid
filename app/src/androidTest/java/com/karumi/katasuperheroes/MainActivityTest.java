@@ -22,20 +22,29 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 import com.karumi.katasuperheroes.di.MainComponent;
 import com.karumi.katasuperheroes.di.MainModule;
+import com.karumi.katasuperheroes.matchers.RecyclerViewItemsCountMatcher;
 import com.karumi.katasuperheroes.model.SuperHero;
 import com.karumi.katasuperheroes.model.SuperHeroesRepository;
 import com.karumi.katasuperheroes.ui.view.MainActivity;
 import it.cosenonjaviste.daggermock.DaggerMockRule;
+
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.regex.Matcher;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class) @LargeTest public class MainActivityTest {
@@ -65,9 +74,34 @@ import static org.mockito.Mockito.when;
     onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
   }
 
+    @Test private void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
+        givenThereAreSomeSuperHeroes( 10 );
+
+        startActivity();
+
+        onView( withText( "¯\\_(ツ)_/¯" ) ).check( matches( not(isDisplayed()) ) );
+    }
+
+    @Test private void testNumberOfSuperheroesShown() {
+        int totalSuperheroes = 10;
+
+        givenThereAreSomeSuperHeroes( totalSuperheroes );
+
+        startActivity();
+
+        onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
+    }
   private void givenThereAreNoSuperHeroes() {
     when(repository.getAll()).thenReturn(Collections.<SuperHero>emptyList());
   }
+
+    private void givenThereAreSomeSuperHeroes(int number) {
+        List<SuperHero> list = new ArrayList<>(  );
+        for ( int i = 0; i < number; i++ ) {
+            list.add( new SuperHero( "SuperHeroe " + i, "", i%2==0, "Superheroe number " + i ) );
+        }
+        when( repository.getAll() ).thenReturn( list );
+    }
 
   private MainActivity startActivity() {
     return activityRule.launchActivity(null);
