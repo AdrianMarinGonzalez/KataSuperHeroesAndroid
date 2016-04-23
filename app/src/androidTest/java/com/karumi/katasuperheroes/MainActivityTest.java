@@ -16,6 +16,7 @@
 
 package com.karumi.katasuperheroes;
 
+import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -40,13 +41,25 @@ import org.mockito.Matchers;
 import org.mockito.Mock;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
+import static android.support.test.espresso.intent.matcher.BundleMatchers.hasEntry;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasCategories;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasExtras;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.toPackage;
+import static android.support.test.espresso.intent.matcher.UriMatchers.hasHost;
 import static android.support.test.espresso.matcher.ViewMatchers.hasSibling;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
+import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.when;
 
 @RunWith(AndroidJUnit4.class) @LargeTest public class MainActivityTest {
@@ -68,13 +81,13 @@ import static org.mockito.Mockito.when;
 
   @Mock SuperHeroesRepository repository;
 
-  @Test public void showsEmptyCaseIfThereAreNoSuperHeroes() {
-    givenThereAreNoSuperHeroes();
-
-    startActivity();
-
-    onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
-  }
+//  @Test public void showsEmptyCaseIfThereAreNoSuperHeroes() {
+//    givenThereAreNoSuperHeroes();
+//
+//    startActivity();
+//
+//    onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
+//  }
 
 //    @Test public void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
 //        givenThereAreSomeSuperHeroes( 10 );
@@ -84,32 +97,44 @@ import static org.mockito.Mockito.when;
 //        onView( withText( "¯\\_(ツ)_/¯" ) ).check( matches( not(isDisplayed()) ) );
 //    }
 
-    @Test public void testNumberOfSuperheroesShown() {
-        int totalSuperheroes = 10;
+//    @Test public void testNumberOfSuperheroesShown() {
+//        int totalSuperheroes = 10;
+//
+//        givenThereAreSomeSuperHeroes( totalSuperheroes );
+//
+//        startActivity();
+//
+//        onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
+//    }
 
-        givenThereAreSomeSuperHeroes( totalSuperheroes );
+//    @Test public void showsSuperHeroesName() {
+//        int number = 1000;
+//
+//        givenThereAreSomeSuperHeroes( number );
+//
+//        startActivity();
+//
+//        for ( int i = 0; i < number; i++ ) {
+//            onView( withText( "SuperHeroe " + i ) ).check( matches( isDisplayed() ) );
+//            if ( repository.getAll().get( i ).isAvenger() ) {
+//                onView( allOf( withId(R.id.iv_avengers_badge), hasSibling( withText( "SuperHeroe " + i ) ) ) )
+//                        .check(matches(isDisplayed()));
+//            }
+//
+//            onView( withId( R.id.recycler_view ) ).perform( RecyclerViewActions.scrollToPosition( i ) );
+//        }
+//    }
+
+    @Test public void checkSuperheroeDetailActivityTitleWhenSuperheroeIsTapped(){
+
+        givenThereAreSomeSuperHeroes( 10 );
 
         startActivity();
 
-        onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
-    }
+        onView(withChild( withText( "SuperHeroe 0" ) ) ).perform(click());
 
-    @Test public void showsSuperHeroesName() {
-        int number = 1000;
-
-        givenThereAreSomeSuperHeroes( number );
-
-        startActivity();
-
-        for ( int i = 0; i < number; i++ ) {
-            onView( withText( "SuperHeroe " + i ) ).check( matches( isDisplayed() ) );
-            if ( repository.getAll().get( i ).isAvenger() ) {
-                onView( allOf( withId(R.id.iv_avengers_badge), hasSibling( withText( "SuperHeroe " + i ) ) ) )
-                        .check(matches(isDisplayed()));
-            }
-
-            onView( withId( R.id.recycler_view ) ).perform( RecyclerViewActions.scrollToPosition( i ) );
-        }
+        onView(withId(R.id.tv_super_hero_name))
+                .check( matches( withText( ("SuperHeroe 0") ) ) );
     }
 
   private void givenThereAreNoSuperHeroes() {
