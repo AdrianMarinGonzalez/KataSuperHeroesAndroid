@@ -98,7 +98,8 @@ import static org.mockito.Mockito.when;
     private void givenThereAreSomeSuperHeroes(int number) {
         List<SuperHero> list = new ArrayList<>(  );
         for ( int i = 0; i < number; i++ ) {
-            list.add( new SuperHero( "SuperHeroe " + i, "", i%2==0, "Superheroe number " + i ) );
+            final boolean isAvenger = i%2==0;
+            list.add( new SuperHero( "SuperHeroe " + i, "http://img.lum.dolimg.com/v1/images/3f1baa0812f35ac2910feeaf463a8d9c437a9b19.png?region=0,0,600,600", isAvenger , "Superheroe number " + i ) );
         }
         when( repository.getAll() ).thenReturn( list );
     }
