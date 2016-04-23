@@ -74,7 +74,7 @@ import static org.mockito.Mockito.when;
     onView(withText("¯\\_(ツ)_/¯")).check(matches(isDisplayed()));
   }
 
-    @Test private void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
+    @Test public void testEmptyCaseNotShowingWhenThereAreSuperheroes( int superheroesNumber, boolean isAvenger ){
         givenThereAreSomeSuperHeroes( 10 );
 
         startActivity();
@@ -82,7 +82,7 @@ import static org.mockito.Mockito.when;
         onView( withText( "¯\\_(ツ)_/¯" ) ).check( matches( not(isDisplayed()) ) );
     }
 
-    @Test private void testNumberOfSuperheroesShown() {
+    @Test public void testNumberOfSuperheroesShown() {
         int totalSuperheroes = 10;
 
         givenThereAreSomeSuperHeroes( totalSuperheroes );
@@ -91,6 +91,9 @@ import static org.mockito.Mockito.when;
 
         onView( withId( R.id.recycler_view ) ).check( matches( RecyclerViewItemsCountMatcher.recyclerViewHasItemCount( totalSuperheroes ) ) );
     }
+
+
+
   private void givenThereAreNoSuperHeroes() {
     when(repository.getAll()).thenReturn(Collections.<SuperHero>emptyList());
   }
